@@ -1,0 +1,21 @@
+function frame = preprocess_frame(frame,live,acq)
+% 
+%     frame = imrotate(frame,-90);
+
+    if live
+        % scattering
+
+        frame = flipud(frame);
+        frame = fliplr(frame);
+        frame = double(frame);
+    else
+%         frame = flipud(frame);
+
+        % scattering
+        frame = imrotate(frame,90);
+        frame = fliplr(frame);
+        frame = double(frame);
+
+        % TIRF samrat
+
+    end

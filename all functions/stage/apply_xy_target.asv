@@ -1,0 +1,88 @@
+function handles = apply_xy_target(handles)
+
+    target_x = str2num(handles.stage_x_target.String);
+    target_y = str2num(handles.stage_y_target.String);
+
+    % NEW - set boundaries to prevent hitting the objective
+    % x
+    if target_x > 8000
+        target_x = 8000;
+        handles.stage_x_target.String = num2str(target_x);
+    else
+        if target_x < -8000
+            target_x = -8000;
+            handles.stage_x_target.String = num2str(target_x);
+        end
+    end
+    % y
+    if target_y > 8000
+        target_y = 8000;
+        handles.stage_y_target.String = num2str(target_x);
+    else
+        if target_y < -8000
+            target_y = -8000;
+            handles.stage_y_target.String = num2str(target_x);
+        end
+    end
+
+    target_x = min(target_x,8000);
+    target_x = max(target_x,-8000);
+
+    current_x = str2num(handles.stage_x_current.String);
+    current_y = str2num(handles.stage_y_current.String);
+
+    dx = target_x - current_x;
+    dy = target_y - current_y;
+
+    [device_dx,device_dy] = convert_xy(dx,dy);
+
+%     error_threshold = 5;
+%     error = inf;
+%     iterations = 0;
+%     while error>error_threshold
+        [status,device_result_dx,device_result_dy] = handles.DeviceObj.Move(device_dx,device_dy,0,0,1);
+%         error = max(device_result_dx - device_dx,device_result_dy - device_dy);
+%         iterations = iterations + 1;
+%     end
+%     if iterations>1
+%         fprintf('iterations: %', iterations);
+%     end
+
+%     device_result_dx = round(device_result_dx,3);
+%     device_result_dy = round(device_result_dy,3);
+    [result_dx,result_dy] = convert_xy(device_result_dx,device_result_dy);
+
+    total_x = str2num(handles.stage_x_current.String);
+    total_y = str2num(handles.stage_y_current.String);
+
+    total_x = total_x + result_dx;
+    total_y = total_y + result_dy;
+
+    handles.DeviceObj.XTotalTravel = total_x; 
+    handles.DeviceObj.YTotalTravel = total_y;
+
+    if  strcmp('X Home Limit',status) 
+%         handles.DeviceObj.XTotalTravel=0;
+        total_x = 0;
+    end 
+    if strcmp('Y Home Limit',status) 
+%         handles.DeviceObj.YTotalTravel=0;
+        total_y = 0;
+    end
+
+    handles.DeviceObj.XTotalTravel = total_x;
+    handles.DeviceObj.YTotalTravel = total_y;
+
+    handles.stage_x_current.String = total_x;
+    handles.stage_y_current.String = total_y;
+
+
+
+
+
+
+
+
+
+
+

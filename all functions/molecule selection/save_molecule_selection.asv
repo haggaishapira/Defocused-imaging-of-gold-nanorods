@@ -1,0 +1,21 @@
+function save_molecule_selection(handles,full_name)
+
+    [selected_molecules,num_mol] = get_molecules_from_selection(molecules,selection);
+    nums = cell2mat({selected_molecules.num});
+
+    file_num = handles.file_list.Value;
+    file_metadata = handles.file_metadatas(file_num);
+    full_name = file_metadata.full_name;
+
+    [pathname, filename, extension] = fileparts(full_name);
+
+    path_and_filename = [pathname '\' filename '_molecule_selection'];
+
+    custom_name = 1;
+
+    if custom_name
+        uisave('nums',[path_and_filename '.mat']);
+    else
+        save([path_and_filename '.mat'],'nums','-mat');
+    end
+ 

@@ -1,0 +1,72 @@
+function ROI_image = update_ROI_image(handles,plot_info)
+
+    disp_mol = plot_info.disp_mol;
+    curr_frame = plot_info.curr_frame;
+
+    ROI = disp_mol.ROI(curr_frame,:);
+    frame = handles.frame;
+    ROI_image = get_integer_pixel_ROI_image(frame, ROI);
+    ROI_image = double(ROI_image);
+%     ROI_image = ROI_image / sum(ROI_image(:));
+
+%     ROI_image(ROI_image>1000) = 1000;
+
+    
+    transform = plot_info.transform(plot_info.disp_mol_index);
+    
+    transform = 0;
+
+    if transform
+        ROI_image = ROI_image - min(ROI_image(:));
+        mat = zeros(29,29);
+        factor = 1;
+        for i=1:29
+            for j=1:29
+                val1 = factor*30-i*factor;
+                val2 = factor*30-j*factor;
+                mat(i,j) = val1+val2; 
+            end
+        end
+    
+        mat = mat / sum(mat(:));
+        mx_1 = max(ROI_image(:));
+    %     
+
+        ROI_image = ROI_image/sum(ROI_image(:));
+        ROI_image = ROI_image .* mat;
+        mx_2 = max(ROI_image(:));
+        ROI_image = ROI_image * 1 * mx_1/mx_2;
+    end
+
+    ROI_dim = size(ROI_image,1);
+    default_dim = 29;
+    default_im = zeros(default_dim,default_dim);
+    start = (default_dim - ROI_dim)/2 + 1;
+    default_im(start:start+ROI_dim-1,start:start+ROI_dim-1) = ROI_image;
+
+%     handles.ax_ROI.Children(1).CData = ROI_image;
+    handles.ax_ROI.Children(end).CData = default_im;
+    if sum(ROI_image(:)) > 0
+%         handles.ax_ROI.CLim = [min(ROI_image(:)) max(ROI_image(:))];
+        handles.ax_ROI.CLim = handles.ax_video.CLim;
+    else
+        handles.ax_ROI.CLim = [0 1];
+    end
+    handles.ax_ROI.XLim = [0.5 default_dim+0.5];
+    handles.ax_ROI.YLim = [0.5 default_dim+0.5];
+
+    
+
+%     f=figure;
+%     ax = axes(f);
+%     surf(ax,ROI_image);
+%     ax.View = [90 0];
+%     ax.ZLim(2) = 3000;
+    
+
+
+
+
+
+   
+

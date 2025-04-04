@@ -1,0 +1,9 @@
+function lines = make_lines_array(molecules,num_mol)
+    
+    lines = [];
+    for i=1:num_mol
+        lines = [lines;...
+            molecules(i).arrow_main.Edge;...
+            molecules(i).arrow_right.Edge;...
+            molecules(i).arrow_left.Edge];
+    end

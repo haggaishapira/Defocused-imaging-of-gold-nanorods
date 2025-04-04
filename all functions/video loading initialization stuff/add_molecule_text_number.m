@@ -1,0 +1,1 @@
+function add_molecule_text_number

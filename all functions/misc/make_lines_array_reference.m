@@ -1,0 +1,9 @@
+function lines = make_lines_array_reference(molecules,num_mol)
+    
+    lines = [];
+    for i=1:num_mol
+        lines = [lines;...
+            molecules(i).arrow_main_reference.Edge;...
+            molecules(i).arrow_right_reference.Edge;...
+            molecules(i).arrow_left_reference.Edge];
+    end

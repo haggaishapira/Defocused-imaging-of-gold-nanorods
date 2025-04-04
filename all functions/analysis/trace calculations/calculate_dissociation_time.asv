@@ -1,0 +1,38 @@
+function [dissociation_time,dissociation_frame] = calculate_dissociation_time(int,framerate,first)
+
+        factor = 0.05;
+        found = 0;
+
+        len = length(int);
+
+        num_frames = min(10,len);
+%         int = molecule.back + molecule.int;
+%         int = molecule.int;
+        avg_int_start = sum(int(1:num_frames)) / num_frames;
+
+        min_diss_time = 10;
+        min_diss_frame = round(min_diss_time*framerate);
+        min_diss_frame = max(min_diss_frame,1);
+        for i=min_diss_frame:len
+            if int(i) < avg_int_start * factor  
+                
+                int_check = sum(int(i:i+num_frames-1)) / num_frames;
+%                 int_check = int(i);
+                if  int_check < avg_int_start * factor
+%                     dissociation_time = t(i);
+                    dissociation_frame = i;
+                    dissociation_time = dissociation_frame/framerate;
+                    
+                    found = 1;
+                    break;
+                end
+            end
+        end
+        if ~found
+            dissociation_time = inf;
+            dissociation_frame = inf;
+        end
+
+
+
+        
